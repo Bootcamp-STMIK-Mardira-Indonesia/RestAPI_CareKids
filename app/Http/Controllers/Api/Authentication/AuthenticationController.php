@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\Authentication;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Validated;
+use Illuminate\Contracts\Validation\Validator;
 
 class AuthenticationController extends Controller
 {
@@ -13,57 +14,57 @@ class AuthenticationController extends Controller
     {
         $request->validate([
             'email' => 'required|email|unique:users',
-            'username' => 'required|string',
+            'username' => 'required|string|unique:users',
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'password' => 'required|confirmed|min:8'
+            'password' => 'required|confirmed|min:6'
         ]);
 
-        $user = User::create([
-            'email' => $request->email,
-            'username' => $request->username,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'password' => Hash::make($request->password)
-        ]);
+        if (User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'message' => 'Email already exists'
+            ], 409);
+        } elseif (User::where('username', $request->username)->exists()) {
+            return response()->json([
+                'message' => 'Username already exists'
+            ], 409);
+        } else {
+            $user = User::create([
+                'email' => $request->email,
+                'username' => $request->username,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'password' => bcrypt($request->password)
+            ]);
 
-        $accessToken = $user->createToken($request->email)->plainTextToken;
-
-        return response()->json([
-            'message' => 'Registrasi Success',
-            'data' => $user,
-            'meta' => [
-                'token' => $accessToken
-            ]
-        ], 201);
+            $user->save();
+            return response()->json([
+                'message' => 'Successfully created user!',
+                'data' => $user,
+            ], 201);
+        }
     }
 
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required|min:6'
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $credentials = $request->only(['email', 'password']);
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => ['These credentials do not match our records.']
-            ], 404);
+        if (!auth()->attempt($credentials)) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
-        $accessToken = $user->createToken($request->email)->plainTextToken;
-
         return response()->json([
-            'message' => 'Login Success',
-            'data' => $user,
-            'meta' => [
-                'token' => $accessToken
-            ]
-        ], 201);
+            'message' => 'Success',
+            'data' => auth()->user(),
+        ], 200);
     }
-
 
     public function forgotPassword(Request $request)
     {
@@ -78,20 +79,16 @@ class AuthenticationController extends Controller
                 'message' => ['We can\'t find a user with that e-mail address.']
             ], 404);
         }
-
-        $user->sendPasswordResetNotification($user->createToken($request->email)->plainTextToken);
-
         return response()->json([
             'message' => 'Success'
         ], 200);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        $request->user()->currentAccessToken()->delete();
-
+        auth()->logout();
         return response()->json([
-            'message' => 'Logout Success'
+            'message' => 'Successfully logged out'
         ], 200);
     }
 }

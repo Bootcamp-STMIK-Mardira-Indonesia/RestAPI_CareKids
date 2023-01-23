@@ -2,8 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Authentication\AuthenticationController;
 use App\Http\Controllers\Api\User\ProfileController;
+use App\Http\Controllers\Api\Content\ContentController;
+use App\Http\Controllers\Api\Content\ArticleController;
+use App\Http\Controllers\Api\Authentication\AuthenticationController;
+use App\Http\Controllers\Api\Content\CategoryController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,10 +23,36 @@ use App\Http\Controllers\Api\User\ProfileController;
 //     return $request->user();
 // });
 
-Route::post('/register', [AuthenticationController::class, 'register']);
-Route::post('/login', [AuthenticationController::class, 'login']);
-Route::get('/logout', [AuthenticationController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::get('/user/profile', [ProfileController::class, 'index'])->middleware('auth:sanctum');
-Route::put('/user/profile', [ProfileController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('/user/profile', [ProfileController::class, 'destroy'])->middleware('auth:sanctum');
+//Register Admin
+Route::post('/register', [AuthenticationController::class, 'register']); //pending
+Route::post('/login', [AuthenticationController::class, 'login']); //pending
+
+//Admin Panel
+Route::group(['middleware' => ['AuthBasicApi']], function () {
+    Route::get('/logout', [AuthenticationController::class, 'logout']); //pending
+    Route::get('/user/profile', [ProfileController::class, 'index']); //pending
+    Route::put('/user/profile', [ProfileController::class, 'update']); //pending
+    Route::delete('/user/profile', [ProfileController::class, 'destroy']); //pending
+});
+
+//User Panel
+Route::get('/content', [ContentController::class, 'index']);
+Route::get('/articles', [ArticlesController::class, 'index']);
+
+
+//test route category
+Route::post('/category', [CategoryController::class, 'store']);
+Route::get('/category', [CategoryController::class, 'index']);
+Route::get('/category/{id}', [CategoryController::class, 'show']);
+Route::put('/category/{id}', [CategoryController::class, 'update']);
+Route::delete('/category/{id}', [CategoryController::class, 'destroy']);
+
+//test route articles
+Route::post('/article', [ArticleController::class, 'store']); //pengerjaan
+Route::get('/article', [ArticleController::class, 'index']);
+Route::get('/article/{id}', [ArticleController::class, 'show']);
+Route::put('/article/{id}', [ArticleController::class, 'update']); //pengerjaan
+Route::delete('/article/{id}', [ArticleController::class, 'destroy']);
+Route::get('/article/search/{keyword}', [ArticleController::class, 'search']); //pengerjaan
+Route::get('/article/category/{id}', [ArticleController::class, 'showByCategory']);//pengerjaan 
