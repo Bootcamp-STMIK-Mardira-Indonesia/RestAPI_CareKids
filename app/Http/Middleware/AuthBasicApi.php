@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthBasicApi
 {
@@ -17,11 +19,15 @@ class AuthBasicApi
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::onceBasic()) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
+            $user = User::where('email', $_SERVER['PHP_AUTH_USER'])->first();
+            if ($user && Hash::check($_SERVER['PHP_AUTH_PW'], $user->password)) {
+                Auth::login($user);
+                return $next($request);
+            }
         }
-        return $next($request);
+        return response()->json(['message' => 'Please Login or Registed'], 401, [
+            'WWW-Authenticate' => 'Basic'
+        ]);
     }
 }

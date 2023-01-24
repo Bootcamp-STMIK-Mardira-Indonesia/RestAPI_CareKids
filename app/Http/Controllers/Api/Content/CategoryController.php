@@ -8,7 +8,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
+
 {
+    function __construct()
+    {
+        $this->middleware('AuthBasicApi');
+    }
     public function index()
     {
         $categories = Category::all();
@@ -59,14 +64,33 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::find($id);
-        $category->update([
-            'name_category' => $request->name_category,
-            'slug_category' => Str::slug($request->name_category,)
-        ]);
-        return response()->json([
-            'message' => 'Success Update Category',
-            'data' => $category,
-        ], 200);
+        if (!$category) {
+            return response()->json([
+                'message' => 'Category Not Found'
+            ], 404);
+        } else {
+            if ($request->name_category == null) {
+                return response()->json([
+                    'message' => 'Name Category is required'
+                ], 400);
+            } else {
+                $category = Category::where('name_category', $request->name_category)->first();
+                if ($category) {
+                    return response()->json([
+                        'message' => 'Name Category is already exist'
+                    ], 400);
+                }
+                $category = Category::find($id);
+                $category->update([
+                    'name_category' => $request->name_category,
+                    'slug_category' => Str::slug($request->name_category,)
+                ]);
+                return response()->json([
+                    'message' => 'Success Update Category',
+                    'data' => $category,
+                ], 200);
+            }
+        }
     }
 
     public function destroy($id)

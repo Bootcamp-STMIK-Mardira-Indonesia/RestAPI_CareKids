@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\Content;
 
+use App\Models\User;
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\PostsResource;
 
 class ArticleController extends Controller
@@ -46,20 +49,13 @@ class ArticleController extends Controller
             'title' => 'required',
             'description' => 'required',
             'content' => 'required',
-            'user_id' => 'required',
-            'category_id' => 'required',
         ]);
-        $post = Article::create([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'image' => $request->image,
-            'description' => $request->description,
-            'content' => $request->content,
-            'video' => $request->video,
-            'user_id' => $request->user_id,
-            'category_id' => $request->category_id,
-            'status' => $request->status,
+
+        $request->merge([
+            'user_id' => Auth::user()->id,
+            'category_id' => Category::where('name_category', $request->category)->first()->id,
         ]);
+        $post = Article::create($request->all());
         return response()->json([
             'message' => 'Success Create Post',
             'data' => new PostsResource($post->LoadMissing(['user:id,username', 'category:id,name_category'])),

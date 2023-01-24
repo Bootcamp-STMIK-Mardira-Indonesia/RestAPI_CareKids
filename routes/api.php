@@ -25,28 +25,24 @@ use App\Http\Controllers\Api\Content\CategoryController;
 
 
 //Register Admin
-Route::post('/register', [AuthenticationController::class, 'register']); //pending
-Route::post('/login', [AuthenticationController::class, 'login']); //pending
+Route::post('/register', [AuthenticationController::class, 'register']);
+Route::post('/login', [AuthenticationController::class, 'login']);
 
 //Admin Panel
 Route::group(['middleware' => ['AuthBasicApi']], function () {
-    Route::get('/logout', [AuthenticationController::class, 'logout']); //pending
-    Route::get('/user/profile', [ProfileController::class, 'index']); //pending
-    Route::put('/user/profile', [ProfileController::class, 'update']); //pending
-    Route::delete('/user/profile', [ProfileController::class, 'destroy']); //pending
+    Route::get('/logout', [AuthenticationController::class, 'logout']);
+
+    //test route category
+    Route::post('/category', [CategoryController::class, 'store']);
+    Route::get('/category', [CategoryController::class, 'index']);
+    Route::get('/category/{id}', [CategoryController::class, 'show']);
+    Route::put('/category/{id}', [CategoryController::class, 'update']);
+    Route::delete('/category/{id}', [CategoryController::class, 'destroy']);
 });
 
 //User Panel
 Route::get('/content', [ContentController::class, 'index']);
 Route::get('/articles', [ArticlesController::class, 'index']);
-
-
-//test route category
-Route::post('/category', [CategoryController::class, 'store']);
-Route::get('/category', [CategoryController::class, 'index']);
-Route::get('/category/{id}', [CategoryController::class, 'show']);
-Route::put('/category/{id}', [CategoryController::class, 'update']);
-Route::delete('/category/{id}', [CategoryController::class, 'destroy']);
 
 //test route articles
 Route::post('/article', [ArticleController::class, 'store']); //pengerjaan
