@@ -25,7 +25,8 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate();
             $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate();
-            $table->enum('status', ['draft', 'published', 'unpublished']);
+            $table->unsignedBigInteger('status_id');
+            $table->foreign('status_id')->references('id')->on('statuses');
             $table->softDeletes();
             $table->timestamps();
         });

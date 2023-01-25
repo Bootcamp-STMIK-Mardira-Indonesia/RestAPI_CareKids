@@ -22,11 +22,11 @@ class PostsResource extends JsonResource
             'description' => $this->description,
             'content' => $this->content,
             'video' => $this->video,
-            'author' => $this->user->username, // 'user_id'
-            'category' => $this->category->name_category, // 'category_id'
-            'status' => $this->status,
             'created_at' => date_format($this->created_at, 'd-m-Y H:i:s'), // 'd-m-Y H:i:s
-            'updated_at' => date_format($this->updated_at, 'd-m-Y H:i:s'),
+            'author' => $this->whenLoaded('user'),
+            'category' => $this->whenLoaded('category'),
+            'status' => $this->whenLoaded('status'),
+            'comments' => $this->whenLoaded('comments'),
         ];
     }
 }

@@ -16,9 +16,7 @@ class AuthenticationController extends Controller
     {
         $request->validate([
             'email' => 'required|email|unique:users',
-            'username' => 'required|string|unique:users',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'full_name' => 'required|string|max:255',
             'password' => 'required|confirmed|min:6'
         ]);
 
@@ -26,16 +24,10 @@ class AuthenticationController extends Controller
             return response()->json([
                 'message' => 'Email already exists'
             ], 409);
-        } elseif (User::where('username', $request->username)->exists()) {
-            return response()->json([
-                'message' => 'Username already exists'
-            ], 409);
         } else {
             $user = User::create([
                 'email' => $request->email,
-                'username' => $request->username,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
+                'full_name' => $request->full_name,
                 'password' => bcrypt($request->password)
             ]);
 
