@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('contact_us', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('fullname', 50);
-            $table->string('email', 50);
-            $table->string('phone_number', 50);
-            $table->text('message');
-            $table->enum('status', ['read', 'unread'])->default('unread');
+            $table->string('name_category');
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contact_us');
+        Schema::dropIfExists('categories_tabel');
     }
 };

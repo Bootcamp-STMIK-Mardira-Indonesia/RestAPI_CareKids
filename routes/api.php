@@ -2,8 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Content\ArticleController;
+use App\Http\Controllers\Api\Content\CommentController;
+use App\Http\Controllers\Api\Content\CategoryController;
 use App\Http\Controllers\Api\Authentication\AuthenticationController;
-use App\Http\Controllers\Api\User\ProfileController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,10 +22,42 @@ use App\Http\Controllers\Api\User\ProfileController;
 //     return $request->user();
 // });
 
+
+//Register Admin
 Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/login', [AuthenticationController::class, 'login']);
-Route::get('/logout', [AuthenticationController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::get('/user/profile', [ProfileController::class, 'index'])->middleware('auth:sanctum');
-Route::put('/user/profile', [ProfileController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('/user/profile', [ProfileController::class, 'destroy'])->middleware('auth:sanctum');
+//Admin Panel
+Route::group(['middleware' => ['AuthBasicApi']], function () {
+    Route::get('/logout', [AuthenticationController::class, 'logout']);
+
+    //Category Route
+    Route::post('/category', [CategoryController::class, 'store']);
+    Route::get('/category', [CategoryController::class, 'index']);
+    Route::get('/category/{id}', [CategoryController::class, 'show']);
+    Route::put('/category/{id}', [CategoryController::class, 'update']);
+    Route::delete('/category/{id}', [CategoryController::class, 'destroy']);
+
+    //Article Route
+    Route::post('/article', [ArticleController::class, 'store']); //belum bisa upload file
+    Route::put('/article/{id}', [ArticleController::class, 'update']); //->middleware('Author'); //pengerjaan
+    Route::delete('/article/{id}', [ArticleController::class, 'destroy'])->middleware('Author');
+    Route::get('/article/search/{keyword}', [ArticleController::class, 'search']);
+    Route::get('/article/user/{id}', [ArticleController::class, 'showByUser']);
+    Route::get('/article/status/{id}', [ArticleController::class, 'showByStatus']);
+    Route::get('/article/category/{id}', [ArticleController::class, 'showByCategory']);
+    Route::get('/article/trash/{id}', [ArticleController::class, 'showTrash']);
+    Route::get('/article/trash', [ArticleController::class, 'showTrashAll']);
+    Route::get('/article/restore/{id}', [ArticleController::class, 'restore']);
+    Route::get('/article/force/{id}', [ArticleController::class, 'forceDelete']);
+});
+
+//User Panel
+Route::get('/article', [ArticleController::class, 'index']);
+Route::get('/article/{id}', [ArticleController::class, 'show']);
+
+//test route commert
+Route::post('/comment', [CommentController::class, 'store']);
+Route::get('/comment', [CommentController::class, 'index']);
+Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
+Route::get('/comment/force/{id}', [CommentController::class, 'forceDelete']);
