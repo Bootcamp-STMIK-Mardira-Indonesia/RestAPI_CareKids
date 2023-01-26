@@ -40,7 +40,7 @@ Route::group(['middleware' => ['AuthBasicApi']], function () {
 
     //Article Route
     Route::post('/article', [ArticleController::class, 'store']); //belum bisa upload file
-    Route::put('/article/{id}', [ArticleController::class, 'update'])->middleware('Author'); //pengerjaan
+    Route::put('/article/{id}', [ArticleController::class, 'update']); //->middleware('Author'); //pengerjaan
     Route::delete('/article/{id}', [ArticleController::class, 'destroy'])->middleware('Author');
     Route::get('/article/search/{keyword}', [ArticleController::class, 'search']);
     Route::get('/article/user/{id}', [ArticleController::class, 'showByUser']);

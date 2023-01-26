@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostsResource extends JsonResource
+class ArticleDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -23,10 +23,10 @@ class PostsResource extends JsonResource
             'content' => $this->content,
             'video' => $this->video,
             'created_at' => date_format($this->created_at, 'd-m-Y H:i:s'), // 'd-m-Y H:i:s
-            'author' => $this->whenLoaded('user'),
-            'category' => $this->whenLoaded('category'),
-            'status' => $this->whenLoaded('status'),
-            'comments' => $this->whenLoaded('comments'),
+            'author' => $this->whenLoaded('user')->full_name,
+            'category' => $this->whenLoaded('category')->name_category,
+            'status' => $this->whenLoaded('status')->name_status,
+            'comments' => $this->whenLoaded('comments')->pluck('comment'),
         ];
     }
 }

@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Validated;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthenticationController extends Controller
 {
@@ -41,48 +41,36 @@ class AuthenticationController extends Controller
 
     public function login(Request $request)
     {
-        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-            $user = User::where('email', $_SERVER['PHP_AUTH_USER'])->first();
-            //email not wrong or not registered
-            if (!$user) {
-                return response()->json([
-                    'message' => 'Wrong email or unregistered'
-                ], 401);
-            }
-
-            //password wrong
-            if (!Hash::check($_SERVER['PHP_AUTH_PW'], $user->password)) {
-                return response()->json([
-                    'message' => 'Password wrong'
-                ], 401);
-            }
-            Auth::login($user);
-            return response()->json([
-                'message' => 'Successfully logged in',
-                'data' => $user
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
-        }
-    }
-
-    public function forgotPassword(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email'
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|min:6',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'data' => $validator->errors()
+            ], 422);
+        }
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return response([
-                'message' => ['We can\'t find a user with that e-mail address.']
-            ], 404);
+            return response()->json([
+                'message' => 'Wrong email or unregistered'
+            ], 401);
         }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Password wrong'
+            ], 401);
+        }
+
+        Auth::login($user);
         return response()->json([
-            'message' => 'Success'
+            'message' => 'Successfully logged in',
+            'data' => $user
         ], 200);
     }
 

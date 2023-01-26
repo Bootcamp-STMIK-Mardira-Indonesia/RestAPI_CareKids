@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Content;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 
@@ -12,6 +13,11 @@ class CommentController extends Controller
     public function index()
     {
         $comments = Comment::all();
+        if (!$comments || $comments->count() == 0) {
+            return response()->json([
+                'message' => 'Comment Not Found'
+            ], 404);
+        }
         return response()->json([
             'message' => 'Success View All Comments',
             'data' => $comments,
@@ -19,20 +25,23 @@ class CommentController extends Controller
     }
     public function store(Request $request)
     {
-        $validate = $request->validate([
-            'article_id' => 'required|exists:articles,id',
+        $request->validate([
             'comment' => 'required|string',
+            'article_id' => 'required|integer',
         ]);
-
+        if (!Article::find($request->article_id)) {
+            return response()->json([
+                'message' => 'Article Not Found'
+            ], 404);
+        }
         $comment = Comment::create([
-            'article_id' => $request->article_id,
             'comment' => $request->comment,
+            'article_id' => $request->article_id,
         ]);
-
         return response()->json([
             'message' => 'Success Create Comment',
             'data' => $comment,
-        ], 200);
+        ], 201);
     }
 
     public function destroy($id)
