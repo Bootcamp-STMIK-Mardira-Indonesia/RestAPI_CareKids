@@ -18,7 +18,7 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'image' => $this->image,
+            'thumbnail' => $this->thumbnail ? asset('storage/' . $this->thumbnail) : null,
             'description' => $this->description,
             'created_at' => date_format($this->created_at, 'd-m-Y H:i:s'), // 'd-m-Y H:i:s
             'author' => $this->whenLoaded('user')->full_name,
