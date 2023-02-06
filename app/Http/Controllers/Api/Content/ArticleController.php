@@ -19,7 +19,7 @@ class ArticleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index', 'show');
+        $this->middleware('auth:sanctum')->except('index', 'show', 'search', 'showByCategory');
     }
     public function index()
     {
@@ -78,7 +78,7 @@ class ArticleController extends Controller
             $extension = $request->file('thumbnail')->getClientOriginalExtension();
             $thumbnail = $file_name . '.' . $extension;
 
-            Storage::putFileAs('thumbnail', $request->file('thumbnail'), $thumbnail);
+            $thumbnail = Storage::putFileAs('thumbnail', $request->file('thumbnail'), $thumbnail);
         }
 
         $video = null;
@@ -87,7 +87,7 @@ class ArticleController extends Controller
             $extension = $request->file('video')->getClientOriginalExtension();
             $video = $file_name . '.' . $extension;
 
-            Storage::putFileAs('video', $request->file('video'), $video);
+            $video = Storage::putFileAs('video', $request->file('video'), $video);
         }
 
         $request->merge([

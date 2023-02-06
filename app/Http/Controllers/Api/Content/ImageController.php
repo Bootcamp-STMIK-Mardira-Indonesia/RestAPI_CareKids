@@ -15,10 +15,21 @@ class ImageController extends Controller
         $this->middleware('auth:sanctum')->except('index', 'show');
     }
 
+    function generateRandomString($length = 20)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
     public function upload(Request $request)
     {
         $request->validate([
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'name_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'article_id' => 'required|integer'
         ]);
         if (!Article::find($request->article_id)) {
@@ -27,18 +38,32 @@ class ImageController extends Controller
             ], 404);
         }
 
-        $imageName = time() . '.' . $request->image->extension();
-        Storage::putFileAs('images', $request->file('image'), $imageName);
+        $image = null;
+        // if ($request->file('image')) {
+        //     $image_name = $this->generateRandomString();
+        //     $extension = $request->file('image')->getClientOriginalExtension();
+        //     $image = $image_name . '.' . $extension;
+        //     $image = Storage::putFileAs('image', $request->file('image'), $image);
+        // }
+        if ($request->hasFile('image')) {
+            $files = $request->file('image');
 
-        $image = Image::create([
-            'article_id' => $request->article_id,
-            'name_image' => $imageName,
-        ]);
+            foreach ($files as $file) {
+                $image_name = $this->generateRandomString();
+                $extension = $file->getClientOriginalExtension();
+                $image = $image_name . '.' . $extension;
+                $image = Storage::putFileAs('image', $file, $image);
 
-        return response()->json([
-            'message' => 'Success Upload Image',
-            'data' => $image,
-        ], 201);
+                $post = Image::create([
+                    'name_image' => $image,
+                    'article_id' => $request->article_id
+                ]);
+            }
+            return response()->json([
+                'message' => 'Success Upload Image',
+                'data' => $post
+            ], 200);
+        }
     }
 
     public function delete($id)

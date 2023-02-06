@@ -41,10 +41,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/article', [ArticleController::class, 'store']); //belum bisa upload file
     Route::put('/article/{id}', [ArticleController::class, 'update']); //->middleware('Author'); //pengerjaan
     Route::delete('/article/{id}', [ArticleController::class, 'destroy']); //->middleware('Author');
-    Route::get('/article/search/{keyword}', [ArticleController::class, 'search']);
-    Route::get('/article/user/{id}', [ArticleController::class, 'showByUser']);
-    Route::get('/article/status/{id}', [ArticleController::class, 'showByStatus']);
-    Route::get('/article/category/{id}', [ArticleController::class, 'showByCategory']);
     Route::get('/article/trash/{id}', [ArticleController::class, 'showTrash']);
     Route::get('/article/trash', [ArticleController::class, 'showTrashAll']);
     Route::get('/article/restore/{id}', [ArticleController::class, 'restore']);
@@ -66,6 +62,10 @@ Route::get('/article/{id}', [ArticleController::class, 'show']);
 //User Panel Category
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/category/{id}', [CategoryController::class, 'show']);
+Route::get('/article/category/{id}', [ArticleController::class, 'showByCategory']);
+Route::get('/article/search/{keyword}', [ArticleController::class, 'search']);
+Route::get('/article/user/{id}', [ArticleController::class, 'showByUser']);
+Route::get('/article/status/{id}', [ArticleController::class, 'showByStatus']);
 
 //User Panel Comment
 Route::post('/comment', [CommentController::class, 'store']);
