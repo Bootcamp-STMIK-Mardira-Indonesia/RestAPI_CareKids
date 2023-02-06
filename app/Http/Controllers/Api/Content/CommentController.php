@@ -11,7 +11,7 @@ class CommentController extends Controller
 {
     function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index', 'stote', 'update');
+        $this->middleware('auth:sanctum')->except('index', 'store', 'update');
     }
 
     public function index()
@@ -30,6 +30,7 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'required|string',
             'comment' => 'required|string',
             'article_id' => 'required|integer',
         ]);
@@ -39,6 +40,7 @@ class CommentController extends Controller
             ], 404);
         }
         $comment = Comment::create([
+            'name' => $request->name,
             'comment' => $request->comment,
             'article_id' => $request->article_id,
         ]);
