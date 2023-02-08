@@ -29,7 +29,13 @@ class ArticleDetailResource extends JsonResource
             'author' => $this->whenLoaded('user')->full_name,
             'category' => $this->whenLoaded('category')->name_category,
             'status' => $this->whenLoaded('status')->name_status,
-            'comments' => $this->whenLoaded('comments')->pluck('comment', 'name'),
+            'comments' => $this->whenLoaded('comments')->map(function ($comment) {
+                return [
+                    'comment' => $comment->comment,
+                    'name' => $comment->name,
+                    'created_at' => date_format($comment->created_at, 'd-m-Y H:i:s'),
+                ];
+            }),
         ];
     }
 }

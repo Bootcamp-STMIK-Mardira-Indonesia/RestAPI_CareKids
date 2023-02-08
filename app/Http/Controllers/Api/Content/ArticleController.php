@@ -31,7 +31,7 @@ class ArticleController extends Controller
         } else {
             return response()->json([
                 'message' => 'Success View All Articles',
-                'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category'])),
+                'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'comments:id,article_id,name,comment,created_at'])),
             ], 200);
         }
     }
