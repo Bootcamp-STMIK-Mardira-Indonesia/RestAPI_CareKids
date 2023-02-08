@@ -17,14 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
-            $table->string('image')->nullable()->default(null);
+            $table->string('thumbnail')->nullable()->default(null);
             $table->text('description');
             $table->text('content');
             $table->string('video')->nullable()->default(null);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_id');
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate();
-            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnUpdate();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete();
             $table->unsignedBigInteger('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');
             $table->softDeletes();

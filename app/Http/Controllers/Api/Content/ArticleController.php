@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Api\Content;
 
 use App\Models\User;
+use App\Models\Status;
 use App\Models\Article;
 use App\Models\Category;
-use App\Models\Status;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\ArticleDetailResource;
 use App\Http\Resources\ArticleResource;
-
+use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\ArticleDetailResource;
+use App\Http\Resources\ArticleUpdateResource;
 
 class ArticleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('AuthBasicApi')->except('index', 'show');
+        $this->middleware('auth:sanctum')->except('index', 'show', 'search', 'showByCategory');
     }
     public function index()
     {
@@ -30,7 +31,7 @@ class ArticleController extends Controller
         } else {
             return response()->json([
                 'message' => 'Success View All Articles',
-                'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category'])),
+                'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'comments:id,article_id,name,comment,created_at'])),
             ], 200);
         }
     }
@@ -45,9 +46,20 @@ class ArticleController extends Controller
         } else {
             return response()->json([
                 'message' => 'Success View Article',
-                'data' => new ArticleDetailResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status', 'comments'])),
+                'data' => new ArticleDetailResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status', 'comments', 'images'])),
             ], 200);
         }
+    }
+
+    function generateRandomString($length = 20)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
     public function store(Request $request)
@@ -55,15 +67,27 @@ class ArticleController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'content' => 'required|string',
             'video' => 'mimes:mp4,mov,ogg,qt|max:10000',
         ]);
-        if ($request->file('image')) {
-            $validatedData['image'] = $request->file('image')->store('images');
+
+        $thumbnail = null;
+        if ($request->file('thumbnail')) {
+            $file_name = $this->generateRandomString();
+            $extension = $request->file('thumbnail')->getClientOriginalExtension();
+            $thumbnail = $file_name . '.' . $extension;
+
+            $thumbnail = Storage::putFileAs('thumbnail', $request->file('thumbnail'), $thumbnail);
         }
+
+        $video = null;
         if ($request->file('video')) {
-            $validatedData['video'] = $request->file('video')->store('videos');
+            $file_name = $this->generateRandomString();
+            $extension = $request->file('video')->getClientOriginalExtension();
+            $video = $file_name . '.' . $extension;
+
+            $video = Storage::putFileAs('video', $request->file('video'), $video);
         }
 
         $request->merge([
@@ -73,17 +97,21 @@ class ArticleController extends Controller
             'status_id' => $request->status_id,
         ]);
 
-        $posts = Article::create($request->all());
-        if (!$posts) {
-            return response()->json([
-                'message' => 'Failed Create Article'
-            ], 404);
-        } else {
-            return response()->json([
-                'message' => 'Success Create Article',
-                'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status']))
-            ], 200);
-        }
+        $posts = Article::create([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'description' => $request->description,
+            'thumbnail' => $thumbnail,
+            'content' => $request->content,
+            'video' => $video,
+            'user_id' => $request->user_id,
+            'category_id' => $request->category_id,
+            'status_id' => $request->status_id,
+        ]);
+        return response()->json([
+            'message' => 'Success Create Article',
+            'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
+        ], 201);
     }
 
     public function update(Request $request, $id)
@@ -97,15 +125,27 @@ class ArticleController extends Controller
             $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
-                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'content' => 'required|string',
                 'video' => 'mimes:mp4,mov,ogg,qt|max:10000',
             ]);
-            if ($request->file('image')) {
-                $validatedData['image'] = $request->file('image')->store('images');
+
+            $thumbnail = null;
+            if ($request->file('thumbnail')) {
+                $file_name = $this->generateRandomString();
+                $extension = $request->file('thumbnail')->getClientOriginalExtension();
+                $thumbnail = $file_name . '.' . $extension;
+
+                Storage::putFileAs('thumbnail', $request->file('thumbnail'), $thumbnail);
             }
+
+            $video = null;
             if ($request->file('video')) {
-                $validatedData['video'] = $request->file('video')->store('videos');
+                $file_name = $this->generateRandomString();
+                $extension = $request->file('video')->getClientOriginalExtension();
+                $video = $file_name . '.' . $extension;
+
+                Storage::putFileAs('video', $request->file('video'), $video);
             }
 
             $request->merge([
@@ -115,10 +155,17 @@ class ArticleController extends Controller
                 'status_id' => $request->status_id,
             ]);
 
-            $posts->update($request->all());
+            $posts->update([
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'description' => $request->description,
+                'thumbnail' => $thumbnail,
+                'content' => $request->content,
+                'video' => $video,
+            ]);
             return response()->json([
                 'message' => 'Success Update Article',
-                'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
+                'data' => new ArticleUpdateResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
         }
     }
@@ -274,6 +321,21 @@ class ArticleController extends Controller
             $posts->forceDelete();
             return response()->json([
                 'message' => 'Success Force Delete Article',
+            ], 200);
+        }
+    }
+
+    public function forceDeleteAll()
+    {
+        $posts = Article::onlyTrashed()->get();
+        if (!$posts) {
+            return response()->json([
+                'message' => 'Article Not Found'
+            ], 404);
+        } else {
+            $posts->forceDelete();
+            return response()->json([
+                'message' => 'Success Force Delete All Article',
             ], 200);
         }
     }

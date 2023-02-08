@@ -37,10 +37,15 @@ class Article extends Model
         return $this->hasMany(Comment::class, 'article_id', 'id');
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class, 'article_id', 'id');
+    }
+
     protected $fillable = [
         'title',
         'slug',
-        'image',
+        'thumbnail',
         'description',
         'content',
         'video',

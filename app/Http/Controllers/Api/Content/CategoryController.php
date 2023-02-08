@@ -12,7 +12,7 @@ class CategoryController extends Controller
 {
     function __construct()
     {
-        $this->middleware('AuthBasicApi')->except('index', 'show');
+        $this->middleware('auth:sanctum')->except('index', 'show');
     }
     public function index()
     {
