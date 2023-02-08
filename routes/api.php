@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Content\ArticleController;
 use App\Http\Controllers\Api\Content\CommentController;
 use App\Http\Controllers\Api\Content\CategoryController;
 use App\Http\Controllers\Api\Authentication\AuthenticationController;
+use App\Http\Controllers\Api\Contact\ContactController;
+use App\Http\Controllers\Api\About\AboutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,3 +63,18 @@ Route::post('/comment', [CommentController::class, 'store']);
 Route::get('/comment', [CommentController::class, 'index']);
 Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
 Route::get('/comment/force/{id}', [CommentController::class, 'forceDelete']);
+
+//route contact
+Route::get('/contact', [ContactController::class, 'index']);
+Route::post('/contact', [ContactController::class, 'store']);
+Route::delete('/contact/{id}', [ContacttController::class, 'destroy']);
+
+//route about
+Route::get('/about', [AboutController::class, 'index']);
+Route::post('/about', [AboutController::class, 'store']);
+Route::delete('/about{id}', [AboutController::class, 'destroy']);
+
+
+
+
+

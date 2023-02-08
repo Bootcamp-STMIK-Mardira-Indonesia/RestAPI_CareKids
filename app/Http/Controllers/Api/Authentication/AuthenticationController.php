@@ -74,6 +74,15 @@ class AuthenticationController extends Controller
         ], 200);
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'full_name' => 'required|string',
+            'profile' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            
+        ]);
+    }    
+
     public function logout()
     {
         auth()->logout();
