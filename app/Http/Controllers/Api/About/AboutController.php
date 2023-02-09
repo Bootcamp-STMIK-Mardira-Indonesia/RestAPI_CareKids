@@ -18,15 +18,15 @@ class AboutController extends Controller
         }
         return response()->json([
             'message' => 'About View All Comments',
-            'pesan' => $abouts,
+            'data' => $abouts,
         ], 200);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'misi' => 'required|text',
-            'visi' => 'required|text',
+            'misi' => 'required|string',
+            'visi' => 'required|string',
 
         ]);
 

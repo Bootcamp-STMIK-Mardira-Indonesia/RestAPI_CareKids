@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Content\CategoryController;
 use App\Http\Controllers\Api\Authentication\AuthenticationController;
 use App\Http\Controllers\Api\Content\ImageController;
 use App\Http\Controllers\Api\Contact\ContactController;
+use App\Http\Controllers\Api\About\AboutController;
 
 /*
 |--------------------------------------------------------------------------
