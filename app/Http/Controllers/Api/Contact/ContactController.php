@@ -18,7 +18,7 @@ class ContactController extends Controller
         }
         return response()->json([
             'message' => 'Success View All Comments',
-            'pesan' => $contacts,
+            'data' => $contacts,
         ], 200);
     }
 
@@ -27,12 +27,14 @@ class ContactController extends Controller
         $request->validate([
             'nama' => 'required|string',
             'email' => 'required|string',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/',
             'pesan' => 'required|string',
         ]);
-        
+
         $contact = Contact::create([
             'nama' => $request->nama,
             'email' => $request->email,
+            'phone' => $request->phone,
             'pesan' => $request->pesan
         ]);
         return response()->json([
@@ -40,7 +42,7 @@ class ContactController extends Controller
             'data' => $contact,
         ], 201);
     }
-    
+
     public function destroy($id)
     {
         $contact = Contact::find($id);
@@ -55,7 +57,4 @@ class ContactController extends Controller
             'data' => $contact,
         ], 200);
     }
-    
 }
-
-

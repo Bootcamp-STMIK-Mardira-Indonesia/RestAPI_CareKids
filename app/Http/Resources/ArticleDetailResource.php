@@ -33,7 +33,7 @@ class ArticleDetailResource extends JsonResource
                 return [
                     'comment' => $comment->comment,
                     'name' => $comment->name,
-                    'created_at' => date_format($comment->created_at, 'd-m-Y H:i:s'),
+                    'created_at' => date_format($comment->created_at, 'd-m-Y'),
                 ];
             }),
         ];

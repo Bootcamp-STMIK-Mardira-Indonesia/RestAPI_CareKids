@@ -20,7 +20,7 @@ class ArticleResource extends JsonResource
             'slug' => $this->slug,
             'thumbnail' => $this->thumbnail ? asset('storage/' . $this->thumbnail) : null,
             'description' => $this->description,
-            'created_at' => date_format($this->created_at, 'd-m-Y H:i:s'), // 'd-m-Y H:i:s
+            'created_at' => date_format($this->created_at, 'd-m-Y'), // 'd-m-Y H:i:s
             'author' => $this->whenLoaded('user')->full_name,
             'category' => $this->whenLoaded('category')->name_category,
         ];

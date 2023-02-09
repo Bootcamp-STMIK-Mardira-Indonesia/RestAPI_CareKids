@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Content\ArticleController;
 use App\Http\Controllers\Api\Content\CommentController;
 use App\Http\Controllers\Api\Content\CategoryController;
 use App\Http\Controllers\Api\Authentication\AuthenticationController;
+use App\Http\Controllers\Api\Content\ImageController;
+use App\Http\Controllers\Api\Contact\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +54,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Comment Route
     Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
     Route::get('/comment/force/{id}', [CommentController::class, 'forceDelete']);
+
+    //Contact Route
+    Route::get('/contact', [ContactController::class, 'index']);
+    Route::get('/contact/{id}', [ContactController::class, 'show']);
+    Route::delete('/contact/{id}', [ContactController::class, 'destroy']);
+    Route::get('/contact/force/{id}', [ContactController::class, 'forceDelete']);
 });
 
 //User Panel Article
@@ -70,3 +78,6 @@ Route::get('/article/status/{id}', [ArticleController::class, 'showByStatus']);
 Route::post('/comment', [CommentController::class, 'store']);
 Route::get('/comment', [CommentController::class, 'index']);
 Route::put('/comment/{id}', [CommentController::class, 'update']);
+
+//Contact
+Route::post('/contact', [ContactController::class, 'store']);
