@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\Authentication\AuthenticationController;
 use App\Http\Controllers\Api\Content\ImageController;
 use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\About\AboutController;
+use App\Http\Controllers\Api\Setting\SettingAppController;
+use App\Http\Controllers\Api\Content\StatusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +68,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/about', [AboutController::class, 'store']);
     Route::put('/about/{id}', [AboutController::class, 'update']);
     Route::delete('/about/{id}', [AboutController::class, 'destroy']);
+
+    //Setting Route
+    Route::post('/setting', [SettingAppController::class, 'store']);
+    Route::put('/setting/{id}', [SettingAppController::class, 'update']);
+
+    //Status Route
+    Route::get('/status', [StatusController::class, 'index']);
+    Route::post('/status', [StatusController::class, 'store']);
+    Route::put('/status/{id}', [StatusController::class, 'update']);
 });
 
 //User Panel Article
@@ -90,3 +101,6 @@ Route::post('/contact', [ContactController::class, 'store']);
 
 //About
 Route::get('/about', [AboutController::class, 'index']);
+
+//Setting
+Route::get('/setting', [SettingAppController::class, 'index']);
