@@ -27,19 +27,19 @@ class AboutController extends Controller
         $request->validate([
             'misi' => 'required|text',
             'visi' => 'required|text',
-            
+
         ]);
-        
+
         $abouts = About::create([
             'misi' => $request->misi,
             'visi' => $request->visi,
         ]);
         return response()->json([
             'message' => 'Success Create Comment',
-            'data' => $about,
+            'data' => $abouts,
         ], 201);
     }
-    
+
     public function destroy($id)
     {
         $about = About::find($id);
@@ -54,7 +54,4 @@ class AboutController extends Controller
             'data' => $about,
         ], 200);
     }
-    
 }
-
-

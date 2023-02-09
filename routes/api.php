@@ -60,6 +60,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/contact/{id}', [ContactController::class, 'show']);
     Route::delete('/contact/{id}', [ContactController::class, 'destroy']);
     Route::get('/contact/force/{id}', [ContactController::class, 'forceDelete']);
+
+    //About Route
+    Route::post('/about', [AboutController::class, 'store']);
+    Route::put('/about/{id}', [AboutController::class, 'update']);
+    Route::delete('/about/{id}', [AboutController::class, 'destroy']);
 });
 
 //User Panel Article
@@ -81,3 +86,6 @@ Route::put('/comment/{id}', [CommentController::class, 'update']);
 
 //Contact
 Route::post('/contact', [ContactController::class, 'store']);
+
+//About
+Route::get('/about', [AboutController::class, 'index']);
