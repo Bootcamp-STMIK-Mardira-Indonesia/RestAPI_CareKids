@@ -102,5 +102,6 @@ Route::post('/contact', [ContactController::class, 'store']);
 //About
 Route::get('/about', [AboutController::class, 'index']);
 
+
 //Setting
 Route::get('/setting', [SettingAppController::class, 'index']);

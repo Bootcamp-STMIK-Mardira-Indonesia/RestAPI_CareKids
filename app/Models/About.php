@@ -12,7 +12,8 @@ class About extends Model
     use HasFactory;
     protected $fillable = [
         'misi',
-        'visi'
+        'visi',
+        'logo',
 
     ];
     

@@ -13,11 +13,11 @@ class ContactController extends Controller
         $contacts = Contact::all();
         if (!$contacts || $contacts->count() == 0) {
             return response()->json([
-                'message' => 'Comment Not Found'
+                'message' => 'Contact Not Found'
             ], 404);
         }
         return response()->json([
-            'message' => 'Success View All Comments',
+            'message' => 'Success View All Contacs',
             'data' => $contacts,
         ], 200);
     }
@@ -38,7 +38,7 @@ class ContactController extends Controller
             'pesan' => $request->pesan
         ]);
         return response()->json([
-            'message' => 'Success Create Comment',
+            'message' => 'Success Create Contact',
             'data' => $contact,
         ], 201);
     }
@@ -48,12 +48,12 @@ class ContactController extends Controller
         $contact = Contact::find($id);
         if (!$contact) {
             return response()->json([
-                'message' => 'Comment Not Found'
+                'message' => 'Contact Not Found'
             ], 404);
         }
         $contact->delete();
         return response()->json([
-            'message' => 'Success Delete Comment',
+            'message' => 'Success Delete Contact',
             'data' => $contact,
         ], 200);
     }

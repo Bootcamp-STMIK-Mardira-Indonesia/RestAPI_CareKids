@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->text('misi', 500);
             $table->text('visi', 500);
+            $table->string('logo', 250);
             $table->SoftDeletes();
             $table->timestamps();
         });

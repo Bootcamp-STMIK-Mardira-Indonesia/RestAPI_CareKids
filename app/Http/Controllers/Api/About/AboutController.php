@@ -13,11 +13,11 @@ class AboutController extends Controller
         $abouts = About::all();
         if (!$abouts || $abouts->count() == 0) {
             return response()->json([
-                'message' => 'About Not Found'
+                'message' => 'About_Us Not Found'
             ], 404);
         }
         return response()->json([
-            'message' => 'About View All Comments',
+            'message' => 'About_Us View All',
             'data' => $abouts,
         ], 200);
     }
@@ -27,15 +27,17 @@ class AboutController extends Controller
         $request->validate([
             'misi' => 'required|string',
             'visi' => 'required|string',
+            'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
 
         $abouts = About::create([
             'misi' => $request->misi,
             'visi' => $request->visi,
+            'logo' => $request->logo,
         ]);
         return response()->json([
-            'message' => 'Success Create Comment',
+            'message' => 'Success Create About_Us',
             'data' => $abouts,
         ], 201);
     }
@@ -45,12 +47,12 @@ class AboutController extends Controller
         $about = About::find($id);
         if (!$about) {
             return response()->json([
-                'message' => 'About Not Found'
+                'message' => 'About_Us Not Found'
             ], 404);
         }
         $about->delete();
         return response()->json([
-            'message' => 'Success About',
+            'message' => 'Success Delete About_Us',
             'data' => $about,
         ], 200);
     }
