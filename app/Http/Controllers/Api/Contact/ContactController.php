@@ -13,7 +13,7 @@ class ContactController extends Controller
         $contacts = Contact::all();
         if (!$contacts || $contacts->count() == 0) {
             return response()->json([
-                'message' => 'Contact Not Found'
+                'message' => 'Message Not Found'
             ], 404);
         }
         return response()->json([
@@ -38,7 +38,7 @@ class ContactController extends Controller
             'pesan' => $request->pesan
         ]);
         return response()->json([
-            'message' => 'Success Send Message contac',
+            'message' => 'Success Message Send',
             'data' => $contact,
         ], 201);
     }
@@ -48,12 +48,12 @@ class ContactController extends Controller
         $contact = Contact::find($id);
         if (!$contact) {
             return response()->json([
-                'message' => 'Contact Not Found..'
+                'message' => 'Message Not Found..'
             ], 404);
         }
         $contact->delete();
         return response()->json([
-            'message' => 'Success Delete message contact',
+            'message' => 'Success Delete message',
             'data' => $contact,
         ], 200);
     }
