@@ -17,7 +17,7 @@ class ContactController extends Controller
             ], 404);
         }
         return response()->json([
-            'message' => 'Success View All Contacs',
+            'message' => 'Success View All Message',
             'data' => $contacts,
         ], 200);
     }
@@ -38,7 +38,7 @@ class ContactController extends Controller
             'pesan' => $request->pesan
         ]);
         return response()->json([
-            'message' => 'Success Create Contact',
+            'message' => 'Success Send Message contac',
             'data' => $contact,
         ], 201);
     }
@@ -53,7 +53,7 @@ class ContactController extends Controller
         }
         $contact->delete();
         return response()->json([
-            'message' => 'Success Delete Contact',
+            'message' => 'Success Delete message contact',
             'data' => $contact,
         ], 200);
     }
