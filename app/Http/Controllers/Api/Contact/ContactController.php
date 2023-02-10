@@ -48,7 +48,7 @@ class ContactController extends Controller
         $contact = Contact::find($id);
         if (!$contact) {
             return response()->json([
-                'message' => 'Contact Not Found'
+                'message' => 'Contact Not Found..'
             ], 404);
         }
         $contact->delete();

@@ -37,7 +37,7 @@ class AboutController extends Controller
             'logo' => $request->logo,
         ]);
         return response()->json([
-            'message' => 'Success Create About_Us',
+            'message' => 'Success Create About_Us..',
             'data' => $abouts,
         ], 201);
     }
