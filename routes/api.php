@@ -94,6 +94,7 @@ Route::get('/article/status/{id}', [ArticleController::class, 'showByStatus']);
 //User Panel Comment
 Route::post('/comment', [CommentController::class, 'store']);
 Route::get('/comment', [CommentController::class, 'index']);
+Route::get('/comment/{article_id}', [CommentController::class, 'show']);
 Route::put('/comment/{id}', [CommentController::class, 'update']);
 
 //Contact

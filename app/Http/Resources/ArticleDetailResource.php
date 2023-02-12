@@ -17,9 +17,9 @@ class ArticleDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'slug' => $this->slug,
+            // 'slug' => $this->slug,
             'thumbnail' => $this->thumbnail ? asset('storage/' . $this->thumbnail) : null,
-            'description' => $this->description,
+            // 'description' => $this->description,
             'content' => $this->content,
             'images' => $this->whenLoaded('images')->pluck('name_image') ? $this->whenLoaded('images')->pluck('name_image')->map(function ($image) {
                 return asset('storage/' . $image);
@@ -29,13 +29,13 @@ class ArticleDetailResource extends JsonResource
             'author' => $this->whenLoaded('user')->full_name,
             'category' => $this->whenLoaded('category')->name_category,
             'status' => $this->whenLoaded('status')->name_status,
-            'comments' => $this->whenLoaded('comments')->map(function ($comment) {
-                return [
-                    'comment' => $comment->comment,
-                    'name' => $comment->name,
-                    'created_at' => date_format($comment->created_at, 'd-m-Y'),
-                ];
-            }),
+            // 'comments' => $this->whenLoaded('comments')->map(function ($comment) {
+            //     return [
+            //         'comment' => $comment->comment,
+            //         'name' => $comment->name,
+            //         'created_at' => date_format($comment->created_at, 'd-m-Y'),
+            //     ];
+            // }),
         ];
     }
 }

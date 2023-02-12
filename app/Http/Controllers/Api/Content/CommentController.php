@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Api\Content;
 
-use App\Http\Controllers\Controller;
 use App\Models\Article;
-use Illuminate\Http\Request;
 use App\Models\Comment;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CommentResource;
 
 class CommentController extends Controller
 {
     function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index', 'store', 'update');
+        $this->middleware('auth:sanctum')->except('index', 'show', 'store', 'update');
     }
 
     public function index()
@@ -27,6 +28,21 @@ class CommentController extends Controller
             'data' => $comments,
         ], 200);
     }
+
+    public function show($article_id)
+    {
+        $comments = Comment::where('article_id', $article_id)->get();
+        if (!$comments || $comments->count() == 0) {
+            return response()->json([
+                'message' => 'Comment Not Found'
+            ], 404);
+        }
+        return response()->json([
+            'message' => 'Success View All Comments This Article',
+            'data' => CommentResource::collection($comments),
+        ], 200);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
