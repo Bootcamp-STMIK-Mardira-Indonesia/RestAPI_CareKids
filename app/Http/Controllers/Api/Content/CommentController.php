@@ -43,14 +43,15 @@ class CommentController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, $article_id)
     {
         $request->validate([
             'name' => 'required|string',
             'comment' => 'required|string',
-            'article_id' => 'required|integer',
         ]);
-        if (!Article::find($request->article_id)) {
+
+        $article = Article::find($article_id);
+        if (!$article) {
             return response()->json([
                 'message' => 'Article Not Found'
             ], 404);
@@ -58,12 +59,12 @@ class CommentController extends Controller
         $comment = Comment::create([
             'name' => $request->name,
             'comment' => $request->comment,
-            'article_id' => $request->article_id,
+            'article_id' => $article_id,
         ]);
         return response()->json([
             'message' => 'Success Create Comment',
             'data' => $comment,
-        ], 201);
+        ], 200);
     }
 
     public function update(Request $request, $id)

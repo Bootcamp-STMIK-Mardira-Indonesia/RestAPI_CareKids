@@ -51,7 +51,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/article/force/{id}', [ArticleController::class, 'forceDelete']);
 
     //Upload Image Article
-    Route::post('/image', [ImageController::class, 'upload']);
+    Route::post('/image/{article_id}', [ImageController::class, 'upload']);
     Route::delete('/image/{id}', [ImageController::class, 'delete']);
 
     //Comment Route
@@ -83,6 +83,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::get('/article', [ArticleController::class, 'index']);
 Route::get('/article/{id}', [ArticleController::class, 'show']);
 
+//User Panel Image
+Route::get('/image/{article_id}', [ImageController::class, 'show']);
+
 //User Panel Category
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/category/{id}', [CategoryController::class, 'show']);
@@ -92,7 +95,7 @@ Route::get('/article/user/{id}', [ArticleController::class, 'showByUser']);
 Route::get('/article/status/{id}', [ArticleController::class, 'showByStatus']);
 
 //User Panel Comment
-Route::post('/comment', [CommentController::class, 'store']);
+Route::post('/comment/{article_id}', [CommentController::class, 'store']);
 Route::get('/comment', [CommentController::class, 'index']);
 Route::get('/comment/{article_id}', [CommentController::class, 'show']);
 Route::put('/comment/{id}', [CommentController::class, 'update']);
@@ -102,7 +105,6 @@ Route::post('/contact', [ContactController::class, 'store']);
 
 //About
 Route::get('/about', [AboutController::class, 'index']);
-
 
 //Setting
 Route::get('/setting', [SettingAppController::class, 'index']);

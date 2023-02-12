@@ -6,13 +6,28 @@ use App\Models\Image;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ImageResource;
 use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
     function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index', 'show');
+        $this->middleware('auth:sanctum')->except('show');
+    }
+
+    public function show($article_id)
+    {
+        $images = Image::where('article_id', $article_id)->get();
+        if (!$images || $images->count() == 0) {
+            return response()->json([
+                'message' => 'Image Not Found'
+            ], 404);
+        }
+        return response()->json([
+            'message' => 'Success View All Images This Article',
+            'data' => ImageResource::collection($images),
+        ], 200);
     }
 
     function generateRandomString($length = 20)
@@ -26,11 +41,10 @@ class ImageController extends Controller
         return $randomString;
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request, $article_id)
     {
         $request->validate([
             'name_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'article_id' => 'required|integer'
         ]);
         if (!Article::find($request->article_id)) {
             return response()->json([
@@ -39,12 +53,6 @@ class ImageController extends Controller
         }
 
         $image = null;
-        // if ($request->file('image')) {
-        //     $image_name = $this->generateRandomString();
-        //     $extension = $request->file('image')->getClientOriginalExtension();
-        //     $image = $image_name . '.' . $extension;
-        //     $image = Storage::putFileAs('image', $request->file('image'), $image);
-        // }
         if ($request->hasFile('image')) {
             $files = $request->file('image');
 
