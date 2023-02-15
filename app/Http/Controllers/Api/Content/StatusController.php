@@ -13,12 +13,13 @@ class StatusController extends Controller
         if (Status::count() > 0) {
             $status = Status::all();
             return response()->json([
-                'status' => 'success',
+                'status' => 'Success',
+                'message' => 'Success View All Status',
                 'data' => $status
             ], 200);
         } else {
             return response()->json([
-                'status' => 'error',
+                'status' => 'Failed',
                 'message' => 'Data not found'
             ], 404);
         }
@@ -31,7 +32,8 @@ class StatusController extends Controller
         ]);
 
         return response()->json([
-            'status' => 'success',
+            'status' => 'Success',
+            'message' => 'Success Create Status',
             'data' => $status
         ], 200);
     }
@@ -44,7 +46,8 @@ class StatusController extends Controller
         ]);
 
         return response()->json([
-            'status' => 'success',
+            'status' => 'Success',
+            'message' => 'Success Update Status',
             'data' => $status
         ], 200);
     }

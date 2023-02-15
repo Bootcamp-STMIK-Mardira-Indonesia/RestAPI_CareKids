@@ -23,6 +23,7 @@ class ArticleResource extends JsonResource
             'created_at' => date_format($this->created_at, 'd-m-Y H:i:s'), // 'd-m-Y H:i:s
             'author' => $this->whenLoaded('user')->full_name,
             'category' => $this->whenLoaded('category')->name_category,
+            'status' => $this->whenLoaded('status')->name_status,
         ];
     }
 }

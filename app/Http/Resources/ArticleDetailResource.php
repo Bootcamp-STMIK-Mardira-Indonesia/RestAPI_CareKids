@@ -24,11 +24,10 @@ class ArticleDetailResource extends JsonResource
             'images' => $this->whenLoaded('images')->pluck('name_image') ? $this->whenLoaded('images')->pluck('name_image')->map(function ($image) {
                 return asset('storage/' . $image);
             }) : null,
-            'video' => $this->video,
+            'video' => $this->video ? asset('storage/' . $this->video) : null,
             'created_at' => date_format($this->created_at, 'd-m-Y H:i:s'), // 'd-m-Y H:i:s
             'author' => $this->whenLoaded('user')->full_name,
             'category' => $this->whenLoaded('category')->name_category,
-            'status' => $this->whenLoaded('status')->name_status,
             // 'comments' => $this->whenLoaded('comments')->map(function ($comment) {
             //     return [
             //         'comment' => $comment->comment,

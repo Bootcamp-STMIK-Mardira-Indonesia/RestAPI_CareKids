@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Storage;
 
 class SettingAppController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth:sanctum')->except('index');
+    }
     public function index()
     {
         if (Setting::count() > 0) {

@@ -20,10 +20,12 @@ class CommentController extends Controller
         $comments = Comment::all();
         if (!$comments || $comments->count() == 0) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Comment Not Found'
             ], 404);
         }
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success View All Comments',
             'data' => $comments,
         ], 200);
@@ -34,10 +36,12 @@ class CommentController extends Controller
         $comments = Comment::where('article_id', $article_id)->get();
         if (!$comments || $comments->count() == 0) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Comment Not Found'
             ], 404);
         }
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success View All Comments This Article',
             'data' => CommentResource::collection($comments),
         ], 200);
@@ -53,6 +57,7 @@ class CommentController extends Controller
         $article = Article::find($article_id);
         if (!$article) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         }
@@ -62,6 +67,7 @@ class CommentController extends Controller
             'article_id' => $article_id,
         ]);
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success Create Comment',
             'data' => $comment,
         ], 200);
@@ -76,6 +82,7 @@ class CommentController extends Controller
         $comment = Comment::find($id);
         if (!$comment) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Comment Not Found'
             ], 404);
         }
@@ -83,6 +90,7 @@ class CommentController extends Controller
             'comment' => $request->comment,
         ]);
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success Update Comment',
             'data' => $comment,
         ], 200);
@@ -93,11 +101,13 @@ class CommentController extends Controller
         $comment = Comment::find($id);
         if (!$comment) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Comment Not Found'
             ], 404);
         }
         $comment->delete();
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success Delete Comment',
             'data' => $comment,
         ], 200);
@@ -108,11 +118,13 @@ class CommentController extends Controller
         $comment = Comment::onlyTrashed()->find($id);
         if (!$comment) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Comment Not Found'
             ], 404);
         }
         $comment->forceDelete();
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success Force Delete Comment',
             'data' => $comment,
         ], 200);

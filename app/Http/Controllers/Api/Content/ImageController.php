@@ -21,10 +21,12 @@ class ImageController extends Controller
         $images = Image::where('article_id', $article_id)->get();
         if (!$images || $images->count() == 0) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Image Not Found'
             ], 404);
         }
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success View All Images This Article',
             'data' => ImageResource::collection($images),
         ], 200);
@@ -41,13 +43,14 @@ class ImageController extends Controller
         return $randomString;
     }
 
-    public function upload(Request $request, $article_id)
+    public function upload(Request $request)
     {
         $request->validate([
             'name_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         if (!Article::find($request->article_id)) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         }
@@ -68,6 +71,7 @@ class ImageController extends Controller
                 ]);
             }
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success Upload Image',
                 'data' => $post
             ], 200);
@@ -79,11 +83,14 @@ class ImageController extends Controller
         $image = Image::find($id);
         if (!$image) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Image Not Found'
             ], 404);
         }
         $image->delete();
+        Storage::delete($image->name_image);
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success Delete Image',
             'data' => $image,
         ], 200);

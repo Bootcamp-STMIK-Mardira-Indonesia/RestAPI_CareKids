@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\Contact\ContactController;
 use App\Http\Controllers\Api\About\AboutController;
 use App\Http\Controllers\Api\Setting\SettingAppController;
 use App\Http\Controllers\Api\Content\StatusController;
+use App\Http\Controllers\Api\Setting\CarouselController;
+use Illuminate\Auth\Middleware\Authenticate;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +75,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/setting', [SettingAppController::class, 'store']);
     Route::put('/setting/{id}', [SettingAppController::class, 'update']);
 
+    //Carousel Route
+    Route::post('/carousel', [CarouselController::class, 'upload']);
+    Route::delete('/carousel/{id}', [CarouselController::class, 'destroy']);
+
+
+
     //Status Route
     Route::get('/status', [StatusController::class, 'index']);
     Route::post('/status', [StatusController::class, 'store']);
@@ -108,3 +116,10 @@ Route::get('/about', [AboutController::class, 'index']);
 
 //Setting
 Route::get('/setting', [SettingAppController::class, 'index']);
+Route::get('/carousel', [CarouselController::class, 'index']);
+
+
+//coba
+Route::get('/profile', [AuthenticationController::class, 'index']);
+Route::get('/profile/{id}', [AuthenticationController::class, 'show']);
+Route::put('/profile/{id}', [AuthenticationController::class, 'update']);

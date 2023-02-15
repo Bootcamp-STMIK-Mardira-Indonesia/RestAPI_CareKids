@@ -21,15 +21,18 @@ class ArticleController extends Controller
     {
         $this->middleware('auth:sanctum')->except('index', 'show', 'search', 'showByCategory');
     }
+
     public function index()
     {
         $posts = Article::all();
         if (!$posts || $posts->count() == 0) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success View All Articles',
                 'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'comments:id,article_id,name,comment,created_at'])),
             ], 200);
@@ -41,10 +44,12 @@ class ArticleController extends Controller
         $posts = Article::find($id);
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success View Article',
                 'data' => new ArticleDetailResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status', 'comments', 'images'])),
             ], 200);
@@ -109,6 +114,7 @@ class ArticleController extends Controller
             'status_id' => $request->status_id,
         ]);
         return response()->json([
+            'status' => 'Success',
             'message' => 'Success Create Article',
             'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
         ], 201);
@@ -119,6 +125,7 @@ class ArticleController extends Controller
         $posts = Article::find($id);
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
@@ -164,6 +171,7 @@ class ArticleController extends Controller
                 'video' => $video,
             ]);
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success Update Article',
                 'data' => new ArticleUpdateResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
@@ -175,11 +183,13 @@ class ArticleController extends Controller
         $posts = Article::find($id);
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
             $posts->delete();
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success Delete Article',
                 'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
@@ -191,10 +201,12 @@ class ArticleController extends Controller
         $posts = Article::where('title', 'like', '%' . $request->search . '%')->get();
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success Search Article',
                 'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
@@ -207,16 +219,19 @@ class ArticleController extends Controller
         if ($user = User::find($id)) {
             if (!$posts || $posts->isEmpty()) {
                 return response()->json([
+                    'status' => 'Failed',
                     'message' => 'Article Not Found'
                 ], 404);
             } else {
                 return response()->json([
+                    'status' => 'Success',
                     'message' => 'Success View All Article By User',
                     'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
                 ], 200);
             }
         } else {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'User Not Found'
             ], 404);
         }
@@ -228,16 +243,19 @@ class ArticleController extends Controller
             $posts = Article::where('status_id', $id)->get();
             if (!$posts || $posts->isEmpty()) {
                 return response()->json([
+                    'status' => 'Failed',
                     'message' => 'Article Not Found'
                 ], 404);
             } else {
                 return response()->json([
+                    'status' => 'Success',
                     'message' => 'Success Search Post By Status',
                     'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
                 ], 200);
             }
         } else {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Status Not Found'
             ], 404);
         }
@@ -249,16 +267,19 @@ class ArticleController extends Controller
             $posts = Article::where('category_id', $id)->get();
             if (!$posts || $posts->isEmpty()) {
                 return response()->json([
+                    'status' => 'Failed',
                     'message' => 'Article Not Found'
                 ], 404);
             } else {
                 return response()->json([
+                    'status' => 'Success',
                     'message' => 'Success Search Post By Category',
                     'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
                 ], 200);
             }
         } else {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Category Not Found'
             ], 404);
         }
@@ -269,10 +290,12 @@ class ArticleController extends Controller
         $posts = Article::onlyTrashed()->find($id);
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success View Article Trash',
                 'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
@@ -284,10 +307,12 @@ class ArticleController extends Controller
         $posts = Article::onlyTrashed()->get();
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success View All Article Trash',
                 'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
@@ -299,11 +324,13 @@ class ArticleController extends Controller
         $posts = Article::onlyTrashed()->find($id);
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
             $posts->restore();
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success Restore Article',
                 'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
@@ -315,11 +342,15 @@ class ArticleController extends Controller
         $posts = Article::onlyTrashed()->find($id);
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
+            Storage::delete($posts->thumbnail);
+            Storage::delete($posts->video);
             $posts->forceDelete();
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success Force Delete Article',
             ], 200);
         }
@@ -330,11 +361,15 @@ class ArticleController extends Controller
         $posts = Article::onlyTrashed()->get();
         if (!$posts) {
             return response()->json([
+                'status' => 'Failed',
                 'message' => 'Article Not Found'
             ], 404);
         } else {
+            Storage::delete($posts->thumbnail);
+            Storage::delete($posts->video);
             $posts->forceDelete();
             return response()->json([
+                'status' => 'Success',
                 'message' => 'Success Force Delete All Article',
             ], 200);
         }
