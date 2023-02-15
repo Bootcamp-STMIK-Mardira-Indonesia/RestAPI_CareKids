@@ -38,13 +38,17 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/logout', [AuthenticationController::class, 'logout']);
 
+    //Admin Profile
+    Route::get('/profile', [AuthenticationController::class, 'index']);
+    Route::get('/profile/{id}', [AuthenticationController::class, 'show']);
+
     //Category Route
     Route::post('/category', [CategoryController::class, 'store']);
     Route::put('/category/{id}', [CategoryController::class, 'update']);
     Route::delete('/category/{id}', [CategoryController::class, 'destroy']);
 
     //Article Route
-    Route::post('/article', [ArticleController::class, 'store']); //belum bisa upload file
+    Route::post('/article', [ArticleController::class, 'store']);
     Route::put('/article/{id}', [ArticleController::class, 'update']); //->middleware('Author'); //pengerjaan
     Route::delete('/article/{id}', [ArticleController::class, 'destroy']); //->middleware('Author');
     Route::get('/article/trash/{id}', [ArticleController::class, 'showTrash']);
@@ -120,6 +124,3 @@ Route::get('/carousel', [CarouselController::class, 'index']);
 
 
 //coba
-Route::get('/profile', [AuthenticationController::class, 'index']);
-Route::get('/profile/{id}', [AuthenticationController::class, 'show']);
-Route::put('/profile/{id}', [AuthenticationController::class, 'update']);

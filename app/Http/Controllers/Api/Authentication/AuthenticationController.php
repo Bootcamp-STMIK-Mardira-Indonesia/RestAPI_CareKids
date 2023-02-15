@@ -16,7 +16,7 @@ class AuthenticationController extends Controller
         $request->validate([
             'email' => 'required|email|unique:users',
             'full_name' => 'required|string|max:255',
-            'password' => 'required|confirmed|min:6'
+            'password' => 'required|confirmed|min:8'
         ]);
 
         if (User::where('email', $request->email)->exists()) {
