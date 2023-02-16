@@ -46,9 +46,10 @@ class SettingAppController extends Controller
             'header' => $request->header,
             'footer' => $request->footer,
             'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'waktu' => $request->waktu,
-            'tlp' => $request->tlp,
+            'time' => $request->time,
+            'telp' => $request->telp,
             'email' => $request->email,
+            'address' => $request->address,
         ]);
 
         $logo = null;
@@ -64,9 +65,10 @@ class SettingAppController extends Controller
             'header' => $request->header,
             'footer' => $request->footer,
             'logo' => $logo,
-            'waktu' => $request->waktu,
-            'tlp' => $request->tlp,
+            'time' => $request->time,
+            'telp' => $request->telp,
             'email' => $request->email,
+            'address' => $request->address,
         ]);
 
         if ($setting) {
@@ -91,9 +93,10 @@ class SettingAppController extends Controller
             'header' => $request->header,
             'footer' => $request->footer,
             'logo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'waktu' => $request->waktu,
-            'tlp' => $request->tlp,
+            'time' => $request->time,
+            'telp' => $request->telp,
             'email' => $request->email,
+            'address' => $request->address,
         ]);
 
         $logo = null;
@@ -110,9 +113,10 @@ class SettingAppController extends Controller
             'header' => $request->header,
             'footer' => $request->footer,
             'logo' => $logo,
-            'waktu' => $request->waktu,
-            'tlp' => $request->tlp,
+            'time' => $request->time,
+            'telp' => $request->telp,
             'email' => $request->email,
+            'address' => $request->address,
         ]);
 
         if ($setting) {

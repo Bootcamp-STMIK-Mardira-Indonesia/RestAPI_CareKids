@@ -12,8 +12,9 @@ class Setting extends Model
         'header',
         'footer',
         'logo',
-        'waktu',
-        'tlp',
-        'email'
+        'time',
+        'telp',
+        'email',
+        'address'
     ];
 }

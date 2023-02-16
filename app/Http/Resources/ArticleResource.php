@@ -22,6 +22,7 @@ class ArticleResource extends JsonResource
             'description' => $this->description,
             'created_at' => date_format($this->created_at, 'd-m-Y H:i:s'), // 'd-m-Y H:i:s
             'author' => $this->whenLoaded('user')->full_name,
+            'author_profile' => $this->whenLoaded('user')->profile ? asset('storage/profile/' . $this->whenLoaded('user')->profile) : null,
             'category' => $this->whenLoaded('category')->name_category,
             'status' => $this->whenLoaded('status')->name_status,
         ];

@@ -34,7 +34,7 @@ class ArticleController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success View All Articles',
-                'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'comments:id,article_id,name,comment,created_at'])),
+                'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name,profile', 'category:id,name_category', 'status:id,name_status', 'comments:id,article_id,name,comment,created_at'])),
             ], 200);
         }
     }
@@ -51,7 +51,7 @@ class ArticleController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success View Article',
-                'data' => new ArticleDetailResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status', 'comments', 'images'])),
+                'data' => new ArticleDetailResource($posts->LoadMissing(['user:id,full_name,profile', 'category:id,name_category', 'status:id,name_status', 'comments', 'images'])),
             ], 200);
         }
     }
@@ -116,7 +116,7 @@ class ArticleController extends Controller
         return response()->json([
             'status' => 'Success',
             'message' => 'Success Create Article',
-            'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
+            'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name,profile', 'category:id,name_category', 'status:id,name_status'])),
         ], 201);
     }
 
@@ -173,7 +173,7 @@ class ArticleController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success Update Article',
-                'data' => new ArticleUpdateResource($posts->LoadMissing(['user:id,full_name', 'category:id,name_category', 'status:id,name_status'])),
+                'data' => new ArticleUpdateResource($posts->LoadMissing(['user:id,full_name,profile', 'category:id,name_category', 'status:id,name_status'])),
             ], 200);
         }
     }

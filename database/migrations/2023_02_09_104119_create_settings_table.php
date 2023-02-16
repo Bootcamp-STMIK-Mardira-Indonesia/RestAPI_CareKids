@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('header', 20)->nullable();
             $table->string('footer', 50)->nullable();
             $table->string('logo', 50)->nullable()->default(null);
-            $table->string('waktu', 50);
-            $table->string('tlp', 20);
+            $table->string('time', 50);
+            $table->string('telp', 20);
             $table->string('email', 50);
+            $table->string('address', 100);
             $table->timestamps();
         });
     }
