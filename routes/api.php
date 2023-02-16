@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Content\ArticleController;
 use App\Http\Controllers\Api\Content\CommentController;
@@ -12,7 +11,6 @@ use App\Http\Controllers\Api\About\AboutController;
 use App\Http\Controllers\Api\Setting\SettingAppController;
 use App\Http\Controllers\Api\Content\StatusController;
 use App\Http\Controllers\Api\Setting\CarouselController;
-use Illuminate\Auth\Middleware\Authenticate;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +119,5 @@ Route::get('/about', [AboutController::class, 'index']);
 //Setting
 Route::get('/setting', [SettingAppController::class, 'index']);
 Route::get('/carousel', [CarouselController::class, 'index']);
-
 
 //coba

@@ -25,6 +25,7 @@ class ArticleResource extends JsonResource
             'author_profile' => $this->whenLoaded('user')->profile ? asset('storage/profile/' . $this->whenLoaded('user')->profile) : null,
             'category' => $this->whenLoaded('category')->name_category,
             'status' => $this->whenLoaded('status')->name_status,
+            'view_count' => $this->view_count,
         ];
     }
 }

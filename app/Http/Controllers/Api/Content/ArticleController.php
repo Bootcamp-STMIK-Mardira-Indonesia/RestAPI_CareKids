@@ -41,6 +41,7 @@ class ArticleController extends Controller
 
     public function show($id)
     {
+        Article::find($id)->increment('view_count');
         $posts = Article::find($id);
         if (!$posts) {
             return response()->json([

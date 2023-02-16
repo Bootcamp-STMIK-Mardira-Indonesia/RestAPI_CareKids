@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete();
             $table->unsignedBigInteger('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');
+            $table->unsignedBigInteger('view_count')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
