@@ -108,7 +108,7 @@ Route::get('/article/status/{id}', [ArticleController::class, 'showByStatus']);
 Route::post('/comment/{article_id}', [CommentController::class, 'store']);
 Route::get('/comment', [CommentController::class, 'index']);
 Route::get('/comment/{article_id}', [CommentController::class, 'show']);
-Route::put('/comment/{id}', [CommentController::class, 'update']);
+Route::put('/comment/{article_id}', [CommentController::class, 'update']);
 
 //Contact
 Route::post('/contact', [ContactController::class, 'store']);

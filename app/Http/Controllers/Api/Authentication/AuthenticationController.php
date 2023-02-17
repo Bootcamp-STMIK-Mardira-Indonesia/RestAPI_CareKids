@@ -33,7 +33,7 @@ class AuthenticationController extends Controller
 
             return response()->json([
                 'status' => 'Success',
-                'message' => 'Successfully created user!',
+                'message' => 'Successfully created account admin! Please Login',
                 'data' => $user,
             ], 201);
         }

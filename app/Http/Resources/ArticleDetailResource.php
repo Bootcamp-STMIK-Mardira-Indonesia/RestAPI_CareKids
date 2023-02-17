@@ -17,9 +17,8 @@ class ArticleDetailResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            // 'slug' => $this->slug,
+            'slug' => $this->slug,
             'thumbnail' => $this->thumbnail ? asset('storage/' . $this->thumbnail) : null,
-            // 'description' => $this->description,
             'content' => $this->content,
             'images' => $this->whenLoaded('images')->pluck('name_image') ? $this->whenLoaded('images')->pluck('name_image')->map(function ($image) {
                 return asset('storage/' . $image);

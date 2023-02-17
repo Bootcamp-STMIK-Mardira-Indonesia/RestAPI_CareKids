@@ -131,11 +131,12 @@ class ArticleController extends Controller
             ], 404);
         } else {
             $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'required|string',
+                'title' => 'string|max:255',
+                'description' => 'string',
                 'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'content' => 'required|string',
+                'content' => 'string',
                 'video' => 'mimes:mp4,mov,ogg,qt|max:10000',
+                'status_id' => 'integer',
             ]);
 
             $thumbnail = null;
@@ -170,6 +171,7 @@ class ArticleController extends Controller
                 'thumbnail' => $thumbnail,
                 'content' => $request->content,
                 'video' => $video,
+                'status_id' => $request->status_id,
             ]);
             return response()->json([
                 'status' => 'Success',

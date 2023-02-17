@@ -73,13 +73,21 @@ class CommentController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $article_id)
     {
         $request->validate([
-            'comment' => 'required|string',
+            'name' => 'string',
+            'comment' => 'string',
         ]);
 
-        $comment = Comment::find($id);
+        $article = Article::find($article_id);
+        if (!$article) {
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Article Not Found'
+            ], 404);
+        }
+        $comment = Comment::where('article_id', $article_id)->first();
         if (!$comment) {
             return response()->json([
                 'status' => 'Failed',
@@ -87,7 +95,9 @@ class CommentController extends Controller
             ], 404);
         }
         $comment->update([
+            'name' => $request->name,
             'comment' => $request->comment,
+            'article_id' => $article_id,
         ]);
         return response()->json([
             'status' => 'Success',

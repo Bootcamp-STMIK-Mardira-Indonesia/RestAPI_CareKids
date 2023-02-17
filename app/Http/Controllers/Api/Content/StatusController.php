@@ -27,15 +27,29 @@ class StatusController extends Controller
 
     public function store(Request $request)
     {
-        $status = Status::create([
-            'name_status' => $request->name_status,
-        ]);
+        if ($request->name_status == null) {
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Name Status is required'
+            ], 400);
+        } else {
+            $status = Status::where('name_status', $request->name_status)->first();
+            if ($status) {
+                return response()->json([
+                    'status' => 'Failed',
+                    'message' => 'Name Status is already exist'
+                ], 400);
+            }
+            $status = Status::create([
+                'name_status' => $request->name_status,
+            ]);
 
-        return response()->json([
-            'status' => 'Success',
-            'message' => 'Success Create Status',
-            'data' => $status
-        ], 200);
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success Create Status',
+                'data' => $status
+            ], 200);
+        }
     }
 
     public function update(Request $request, $id)
