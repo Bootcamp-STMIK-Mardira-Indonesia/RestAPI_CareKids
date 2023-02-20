@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Status;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\Visit;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,7 +20,7 @@ class ArticleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index', 'show', 'search', 'showByCategory');
+        $this->middleware('auth:sanctum')->except('index', 'show', 'search', 'showByCategory', 'showview');
     }
 
     public function index()
@@ -34,9 +35,20 @@ class ArticleController extends Controller
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success View All Articles',
+                'count' => $posts->count(),
                 'data' => ArticleResource::collection($posts->LoadMissing(['user:id,full_name,profile', 'category:id,name_category', 'status:id,name_status', 'comments:id,article_id,name,comment,created_at'])),
             ], 200);
         }
+    }
+
+    public function showview()
+    {
+        $count = Article::where('status_id', 3)->sum('view_count');
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success View All Visitor',
+            'data' => $count,
+        ], 200);
     }
 
     public function show($id)

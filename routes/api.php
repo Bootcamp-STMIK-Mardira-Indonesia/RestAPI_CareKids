@@ -121,4 +121,5 @@ Route::get('/about', [AboutController::class, 'index']);
 Route::get('/setting', [SettingAppController::class, 'index']);
 Route::get('/carousel', [CarouselController::class, 'index']);
 
-//coba
+//Visitor
+Route::get('/visitor', [ArticleController::class, 'showview']);
