@@ -100,7 +100,59 @@ class ArticleController extends Controller
             'slug' => Str::slug($request->title),
             'user_id' => Auth::user()->id,
             'category_id' => $request->category_id,
+            'status_id' => 3,
+        ]);
+
+        $posts = Article::create([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'description' => $request->description,
+            'thumbnail' => $thumbnail,
+            'content' => $request->content,
+            'video' => $video,
+            'user_id' => $request->user_id,
+            'category_id' => $request->category_id,
             'status_id' => $request->status_id,
+        ]);
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Create Article',
+            'data' => new ArticleResource($posts->LoadMissing(['user:id,full_name,profile', 'category:id,name_category', 'status:id,name_status'])),
+        ], 201);
+    }
+    public function stored(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'content' => 'required|string',
+            'video' => 'mimes:mp4,mov,ogg,qt|max:10000',
+        ]);
+
+        $thumbnail = null;
+        if ($request->file('thumbnail')) {
+            $file_name = $this->generateRandomString();
+            $extension = $request->file('thumbnail')->getClientOriginalExtension();
+            $thumbnail = $file_name . '.' . $extension;
+
+            $thumbnail = Storage::putFileAs('thumbnail', $request->file('thumbnail'), $thumbnail);
+        }
+
+        $video = null;
+        if ($request->file('video')) {
+            $file_name = $this->generateRandomString();
+            $extension = $request->file('video')->getClientOriginalExtension();
+            $video = $file_name . '.' . $extension;
+
+            $video = Storage::putFileAs('video', $request->file('video'), $video);
+        }
+
+        $request->merge([
+            'slug' => Str::slug($request->title),
+            'user_id' => Auth::user()->id,
+            'category_id' => $request->category_id,
+            'status_id' => 1,
         ]);
 
         $posts = Article::create([

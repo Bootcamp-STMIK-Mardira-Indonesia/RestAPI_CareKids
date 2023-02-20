@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Article Route
     Route::post('/article', [ArticleController::class, 'store']);
+    Route::post('/article-draft', [ArticleController::class, 'stored']);
     Route::put('/article/{id}', [ArticleController::class, 'update']); //->middleware('Author'); //pengerjaan
     Route::delete('/article/{id}', [ArticleController::class, 'destroy']); //->middleware('Author');
     Route::get('/article/trash/{id}', [ArticleController::class, 'showTrash']);
