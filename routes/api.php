@@ -34,7 +34,7 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 
 //Admin Panel
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/logout', [AuthenticationController::class, 'logout']);
+    Route::post('/logout', [AuthenticationController::class, 'logout']);
 
     //Admin Profile
     Route::get('/profile', [AuthenticationController::class, 'index']);
@@ -53,7 +53,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/article/trash/{id}', [ArticleController::class, 'showTrash']);
     Route::get('/article/trash', [ArticleController::class, 'showTrashAll']);
     Route::get('/article/restore/{id}', [ArticleController::class, 'restore']);
-    Route::get('/article/force/{id}', [ArticleController::class, 'forceDelete']);
+    Route::delete('/article/force/{id}', [ArticleController::class, 'forceDelete']);
 
     //Upload Image Article
     Route::post('/image/{article_id}', [ImageController::class, 'upload']);

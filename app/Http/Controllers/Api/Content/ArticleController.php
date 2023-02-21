@@ -413,8 +413,9 @@ class ArticleController extends Controller
                 'message' => 'Article Not Found'
             ], 404);
         } else {
-            Storage::delete($posts->thumbnail);
-            Storage::delete($posts->video);
+            !is_null($posts->thumbnail) ? Storage::delete($posts->thumbnail) : null;
+            !is_null($posts->image) ? Storage::delete($posts->image) : null;
+            !is_null($posts->video) ? Storage::delete($posts->video) : null;
             $posts->forceDelete();
             return response()->json([
                 'status' => 'Success',
@@ -423,22 +424,22 @@ class ArticleController extends Controller
         }
     }
 
-    public function forceDeleteAll()
-    {
-        $posts = Article::onlyTrashed()->get();
-        if (!$posts) {
-            return response()->json([
-                'status' => 'Failed',
-                'message' => 'Article Not Found'
-            ], 404);
-        } else {
-            Storage::delete($posts->thumbnail);
-            Storage::delete($posts->video);
-            $posts->forceDelete();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Force Delete All Article',
-            ], 200);
-        }
-    }
+    // public function forceDeleteAll()
+    // {
+    //     $posts = Article::onlyTrashed()->get();
+    //     if (!$posts) {
+    //         return response()->json([
+    //             'status' => 'Failed',
+    //             'message' => 'Article Not Found'
+    //         ], 404);
+    //     } else {
+    //         Storage::delete($posts->thumbnail);
+    //         Storage::delete($posts->video);
+    //         $posts->forceDelete();
+    //         return response()->json([
+    //             'status' => 'Success',
+    //             'message' => 'Success Force Delete All Article',
+    //         ], 200);
+    //     }
+    // }
 }
