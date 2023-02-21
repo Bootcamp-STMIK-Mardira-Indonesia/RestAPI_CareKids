@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Contact;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Contact;
+use App\Http\Resources\ContactResource;
 
 class ContactController extends Controller
 {
@@ -19,6 +20,22 @@ class ContactController extends Controller
         return response()->json([
             'message' => 'Success View All Message',
             'data' => $contacts,
+        ], 200);
+    }
+
+    public function show($id)
+    {
+        $contacts = Contact::where('id', $id)->get();
+        if (!$contacts || $contacts->count() == 0) {
+            return response()->json([
+                'status' => 'Failed',
+                'message' => 'Message Not Found'
+            ], 404);
+        }
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success View All Message',
+            'data' => ContactResource::collection($contacts),
         ], 200);
     }
 
